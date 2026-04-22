@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="КиберОйын — Прогресс беті. Деңгейіңді, ұпайыңды және жетістіктерінді бақыла.">
+  <title>Прогресс — КиберОйын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .progress-page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    /* Page hero */
+    .progress-hero {
+      background: linear-gradient(135deg, #10B981, #06B6D4);
+      border-radius: var(--radius);
+      padding: 40px;
+      color: white;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-hero::after {
+      content: '📊';
+      position: absolute;
+      right: 40px;
+      font-size: 8rem;
+      opacity: 0.12;
+    }
+
+    .progress-hero h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .progress-hero p {
+      opacity: 0.9;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* Two column layout */
+    .progress-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .progress-layout { grid-template-columns: 1fr; }
+      .progress-hero { flex-direction: column; padding: 28px 24px; }
+    }
+
+    /* Level card */
+    .level-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .level-ring {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px;
+    }
+
+    .level-ring svg { transform: rotate(-90deg); }
+
+    .level-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .level-ring-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .level-ring-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .level-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .xp-full-bar {
+      height: 14px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0 8px;
+    }
+
+    .xp-full-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      transition: width 1.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .xp-full-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2s linear infinite;
+    }
+
+    @keyframes shimmer {
+      to { left: 100%; }
+    }
+
+    /* Stats summary */
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat-summary-item {
+      background: var(--bg-alt);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-summary-val {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .stat-summary-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Topic progress list */
+    .topic-progress-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .topic-progress-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .tp-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tp-item:last-child { border-bottom: none; }
+
+    .tp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .tp-info { flex: 1; }
+    .tp-name { font-weight: 800; font-size: 0.95rem; margin-bottom: 6px; }
+
+    .tp-bar {
+      height: 8px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .tp-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1.5s ease;
+    }
+
+    .tp-badges {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tp-badge-pill {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .tp-badge-theory { background: #EDE9FE; color: #5B21B6; }
+    .tp-badge-game   { background: #D1FAE5; color: #065F46; }
+    .tp-badge-lock   { background: var(--bg-alt); color: var(--text-muted); }
+
+    /* Badges full display */
+    .badges-full-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      grid-column: 1 / -1;
+    }
+
+    .badges-full-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .badges-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* Reset button */
+    .danger-zone {
+      background: var(--bg-card);
+      border: 2px solid #FCA5A5;
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      grid-column: 1 / -1;
+    }
+
+    .danger-zone h4 { font-weight: 800; color: var(--danger); margin-bottom: 4px; }
+    .danger-zone p  { font-size: 0.9rem; color: var(--text-muted); }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #B91C1C);
+      color: white;
+      border: none;
+    }
+
+    .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(239,68,68,0.4); }
+
+    /* Activity timeline */
+    .activity-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      grid-column: 1 / -1;
+    }
+
+    .activity-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    /* Chart bars */
+    .topic-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 120px;
+      padding: 0 8px;
+    }
+
+    .chart-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .chart-bar-wrap {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .chart-bar {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+      transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      min-height: 4px;
+    }
+
+    .chart-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .chart-val {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🎮</div>
+    КиберОйын
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Басты бет</a></li>
+    <li><a href="theory.html">📚 Теория</a></li>
+    <li><a href="games.html">🎮 Ойындар</a></li>
+    <li><a href="progress.html" class="active">📊 Прогресс</a></li>
+    <li><a href="teacher.html">👩‍🏫 Мұғалім</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="nav-score" id="nav-score">⭐ 0</div>
+    <div class="nav-level" id="nav-level">🏅 Деңгей 1</div>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html">🏠 Басты бет</a>
+  <a href="theory.html">📚 Теория</a>
+  <a href="games.html">🎮 Ойындар</a>
+  <a href="progress.html">📊 Прогресс</a>
+  <a href="teacher.html">👩‍🏫 Мұғалім</a>
+</div>
+
+<!-- PROGRESS PAGE -->
+<div class="progress-page-wrap">
+
+  <!-- Hero -->
+  <div class="progress-hero">
+    <div>
+      <h1>📊 Менің прогрессім</h1>
+      <p>Деңгейіңді, жинаған ұпайыңды және қай тақырыптарды аяқтағаныңды осы жерден бақылай аласың!</p>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="progress-layout">
+
+    <!-- Level card -->
+    <div class="level-card">
+      <h3 class="section-title" style="text-align:center;margin-bottom:24px">🏅 Деңгей</h3>
+
+      <!-- Ring progress -->
+      <div class="level-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="60" fill="none" stroke="var(--bg-alt)" stroke-width="12"/>
+          <circle cx="70" cy="70" r="60" fill="none"
+            stroke="url(#lg1)" stroke-width="12"
+            stroke-linecap="round"
+            stroke-dasharray="376.99"
+            stroke-dashoffset="376.99"
+            id="level-ring-circle"/>
+          <defs>
+            <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#7C3AED"/>
+              <stop offset="100%" style="stop-color:#06B6D4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="level-ring-center">
+          <div class="level-ring-num" id="ring-level-num">1</div>
+          <div class="level-ring-label">Деңгей</div>
+        </div>
+      </div>
+
+      <div class="level-title" id="level-title-text">🌱 Жаңадан бастаушы</div>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:8px">XP прогресі</p>
+      <div class="xp-full-bar">
+        <div class="xp-full-fill" id="xp-full-fill" style="width:0%"></div>
+      </div>
+      <p style="font-size:0.85rem;font-weight:700;color:var(--text-muted)" id="xp-full-text">0 / 100 XP</p>
+
+      <div class="stats-summary-grid">
+        <div class="stat-summary-item">
+          <div class="stat-summary-val" id="ps-points">0</div>
+          <div class="stat-summary-label">Жалпы ұпай</div>
+        </div>
+        <div class="stat-summary-item">
+          <div class="stat-summary-val" id="ps-xp">0</div>
+          <div class="stat-summary-label">Жалпы XP</div>
+        </div>
+        <div class="stat-summary-item">
+          <div class="stat-summary-val" id="ps-streak">0</div>
+          <div class="stat-summary-label">Стрейк 🔥</div>
+        </div>
+        <div class="stat-summary-item">
+          <div class="stat-summary-val" id="ps-acc">0%</div>
+          <div class="stat-summary-label">Дәлдік</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics progress -->
+    <div class="topic-progress-card">
+      <h3>📚 Тақырып прогресі</h3>
+      <div id="topic-progress-list"></div>
+    </div>
+
+    <!-- Activity chart -->
+    <div class="activity-card">
+      <h3>📈 Тақырып балдары</h3>
+      <div class="topic-chart" id="topic-chart"></div>
+    </div>
+
+    <!-- Badges full -->
+    <div class="badges-full-card">
+      <h3>🏆 Барлық жетістіктер</h3>
+      <div class="badges-wrap" id="full-badges-wrap"></div>
+    </div>
+
+    <!-- Danger zone -->
+    <div class="danger-zone">
+      <div>
+        <h4>⚠️ Прогресті тазалау</h4>
+        <p>Барлық деректерді жойып, жаңадан бастайсың. Қайтарып болмайды!</p>
+      </div>
+      <button class="btn btn-danger" onclick="confirmReset()">🗑️ Тазалау</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Confirm Reset Modal -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h2 style="color:var(--danger)">⚠️ Растау</h2>
+      <button class="modal-close" onclick="closeModal('reset-modal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:32px">
+      <div style="font-size:4rem;margin-bottom:16px">🗑️</div>
+      <p style="font-weight:700;margin-bottom:8px">Барлық прогрессіңді жойғың келе ме?</p>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:28px">Бұл әрекетті қайтаруға болмайды. Барлық ұпай, деңгей және жетістіктер жойылады.</p>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-secondary" style="flex:1" onclick="closeModal('reset-modal')">Болдырмау</button>
+        <button class="btn btn-danger btn-full" onclick="APP.reset()">Иә, жою!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/games.js"></script>
+<script>
+
+function confirmReset() {
+  openModal('reset-modal');
+}
+
+function renderProgressPage() {
+  const s = APP.state;
+  const lvl = getLevel(s.xp);
+  const next = getNextLevel(s.xp);
+  const pct = getXpPercent(s.xp);
+  const acc = s.totalAnswered > 0 ? Math.round(s.correctAnswers / s.totalAnswered * 100) : 0;
+
+  // Level ring
+  const circle = document.getElementById('level-ring-circle');
+  if (circle) {
+    const circumference = 376.99;
+    const offset = circumference - (pct / 100) * circumference;
+    setTimeout(() => { circle.style.strokeDashoffset = offset; }, 400);
+  }
+
+  const el = id => document.getElementById(id);
+  if (el('ring-level-num'))   el('ring-level-num').textContent  = lvl.level;
+  if (el('level-title-text')) el('level-title-text').textContent = lvl.title;
+  if (el('xp-full-fill'))     el('xp-full-fill').style.width    = pct + '%';
+  if (el('xp-full-text')) {
+    el('xp-full-text').textContent = next
+      ? `${s.xp} / ${next.xpNeeded} XP` : `${s.xp} XP (MAX)`;
+  }
+  if (el('ps-points'))  el('ps-points').textContent  = s.points;
+  if (el('ps-xp'))      el('ps-xp').textContent      = s.xp;
+  if (el('ps-streak'))  el('ps-streak').textContent  = s.streak;
+  if (el('ps-acc'))     el('ps-acc').textContent     = acc + '%';
+
+  // Topic progress
+  const topicList = Object.entries(s.topics);
+  const topicMeta = {
+    ergonomics: { icon: '🖥️', name: 'Эргономика', cls: 'icon-color-purple', fill: 'progress-color-purple' },
+    history:    { icon: '📜', name: 'ЕТ Тарихы',  cls: 'icon-color-blue',   fill: 'progress-color-blue' },
+    computer:   { icon: '⚙️', name: 'Компьютер',  cls: 'icon-color-green',  fill: 'progress-color-green' },
+    wireless:   { icon: '📡', name: 'Сымсыз желі', cls: 'icon-color-orange', fill: 'progress-color-orange' },
+    encryption: { icon: '🔐', name: 'Шифрлау',    cls: 'icon-color-pink',   fill: 'progress-color-pink' },
+    binary:     { icon: '💻', name: 'Екілік код',  cls: 'icon-color-cyan',   fill: 'progress-color-cyan' },
+  };
+
+  const tpList = el('topic-progress-list');
+  if (tpList) {
+    tpList.innerHTML = topicList.map(([id, data]) => {
+      const meta = topicMeta[id];
+      const todoPct = Math.round((data.score / data.maxScore) * 100);
+      const status = data.theory && data.game
+        ? 'done' : (data.theory || data.game)
+        ? 'in-progress' : 'pending';
+
+      return `
+        <div class="tp-item">
+          <div class="tp-icon ${meta.cls}">${meta.icon}</div>
+          <div class="tp-info">
+            <div class="tp-name">${meta.name}</div>
+            <div class="tp-bar">
+              <div class="tp-fill ${meta.fill}" style="width:${todoPct}%"></div>
+            </div>
+          </div>
+          <div class="tp-badges">
+            <span class="tp-badge-pill ${data.theory ? 'tp-badge-theory' : 'tp-badge-lock'}">
+              ${data.theory ? '✅ Теория' : '📖 Теория'}
+            </span>
+            <span class="tp-badge-pill ${data.game ? 'tp-badge-game' : 'tp-badge-lock'}">
+              ${data.game ? '✅ Ойын' : '🎮 Ойын'}
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Chart
+  const chart = el('topic-chart');
+  if (chart) {
+    const colors = ['#7C3AED','#2563EB','#059669','#D97706','#DB2777','#0891B2'];
+    const labels = ['Эрго','Тар','Комп','Сым','Шифр','Бин'];
+    const scores = topicList.map(([id, d]) => d.score || 0);
+    const maxScore = Math.max(100, ...scores);
+
+    chart.innerHTML = topicList.map(([id, data], i) => {
+      const h = Math.round((data.score / maxScore) * 100);
+      return `
+        <div class="chart-col">
+          <div class="chart-val">${data.score || 0}</div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="background:${colors[i]};height:0%"
+                 id="chart-bar-${i}"></div>
+          </div>
+          <div class="chart-label">${labels[i]}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Animate bars
+    topicList.forEach(([id, data], i) => {
+      const h = Math.round(((data.score || 0) / maxScore) * 100);
+      setTimeout(() => {
+        const bar = el(`chart-bar-${i}`);
+        if (bar) bar.style.height = Math.max(h, 4) + '%';
+      }, 400 + i * 100);
+    });
+  }
+
+  // Badges
+  const badgesWrap = el('full-badges-wrap');
+  if (badgesWrap) {
+    badgesWrap.innerHTML = ALL_BADGES.map(b => `
+      <div class="badge-item ${s.badges.includes(b.id) ? 'unlocked' : 'locked'}" title="${b.desc}">
+        <span class="badge-icon">${b.icon}</span>
+        <span class="badge-name">${b.name}</span>
+        <span class="badge-desc">${s.badges.includes(b.id) ? b.desc : '🔒 Ашылмаған'}</span>
+      </div>
+    `).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderProgressPage();
+});
+</script>
+
+</body>
+</html>

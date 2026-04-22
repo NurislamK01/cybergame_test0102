@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="КиберОйын — Мұғалімге арналған dashboard. Оқушы нәтижелерін бақылау.">
+  <title>Мұғалім Dashboard — КиберОйын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .teacher-wrap {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    /* Teacher Hero */
+    .teacher-hero {
+      background: linear-gradient(135deg, #1E1B4B, #4C1D95, #7C3AED);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      color: white;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .teacher-hero::before {
+      content: '👩‍🏫';
+      position: absolute;
+      right: 40px;
+      font-size: 8rem;
+      opacity: 0.1;
+    }
+
+    .teacher-hero h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .teacher-hero p {
+      opacity: 0.85;
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 500px;
+    }
+
+    .teacher-hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .teacher-hero-btn {
+      padding: 12px 24px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-family: var(--font);
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .teacher-hero-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Dashboard tabs */
+    .dashboard-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-alt);
+      padding: 6px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      width: fit-content;
+      border: 2px solid var(--border);
+    }
+
+    .dash-tab {
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dash-tab.active {
+      background: var(--bg-card);
+      color: var(--primary);
+      box-shadow: 0 2px 10px rgba(124,58,237,0.15);
+    }
+
+    /* Overview cards */
+    .overview-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .overview-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      transition: var(--transition);
+    }
+
+    .overview-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .overview-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .overview-card-val {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .overview-card-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .overview-card-trend {
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .trend-up   { color: var(--success); }
+    .trend-down { color: var(--danger); }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Student table */
+    .student-table-wrap {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .table-toolbar {
+      padding: 18px 24px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .table-toolbar h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--primary);
+    }
+
+    .search-input {
+      padding: 10px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-alt);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: var(--transition);
+      width: 220px;
+    }
+
+    .search-input:focus { border-color: var(--primary); background: var(--bg-card); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    /* Topic completion grid */
+    .topic-completion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .topic-completion-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .tc-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tc-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .tc-name { font-weight: 800; font-size: 0.95rem; }
+
+    .tc-bar-wrap { margin-bottom: 8px; }
+    .tc-bar {
+      height: 10px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .tc-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1.5s ease;
+    }
+    .tc-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Recommendations */
+    .rec-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .rec-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .rec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rec-item:last-child { border-bottom: none; }
+
+    .rec-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .rec-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 4px; }
+    .rec-desc  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* Print button */
+    @media print {
+      .navbar, .teacher-hero-actions, .theme-toggle, .menu-toggle, .dashboard-tabs { display: none !important; }
+    }
+
+    @media (max-width: 700px) {
+      .teacher-hero { flex-direction: column; padding: 28px 20px; }
+      .dashboard-tabs { flex-wrap: wrap; width: 100%; }
+      .overview-cards { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🎮</div>
+    КиберОйын
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Басты бет</a></li>
+    <li><a href="theory.html">📚 Теория</a></li>
+    <li><a href="games.html">🎮 Ойындар</a></li>
+    <li><a href="progress.html">📊 Прогресс</a></li>
+    <li><a href="teacher.html" class="active">👩‍🏫 Мұғалім</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="nav-score" id="nav-score">⭐ 0</div>
+    <div class="nav-level" id="nav-level">🏅 Деңгей 1</div>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html">🏠 Басты бет</a>
+  <a href="theory.html">📚 Теория</a>
+  <a href="games.html">🎮 Ойындар</a>
+  <a href="progress.html">📊 Прогресс</a>
+  <a href="teacher.html">👩‍🏫 Мұғалім</a>
+</div>
+
+<!-- TEACHER DASHBOARD -->
+<div class="teacher-wrap">
+
+  <!-- Hero -->
+  <div class="teacher-hero">
+    <div>
+      <h1>👩‍🏫 Мұғалім Панелі</h1>
+      <p>Оқушының толық прогресін бақылаңыз — қай тақырыпты аяқтады, қанша ұпай жинады, деңгейі қандай.</p>
+    </div>
+    <div class="teacher-hero-actions">
+      <button class="teacher-hero-btn" onclick="window.print()">🖨️ Баспаға шығару</button>
+      <button class="teacher-hero-btn" onclick="exportData()">📥 Экспорт</button>
+    </div>
+  </div>
+
+  <!-- Dashboard tabs -->
+  <div class="dashboard-tabs">
+    <button class="dash-tab active" onclick="switchTab('overview', this)">📊 Шолу</button>
+    <button class="dash-tab" onclick="switchTab('topics', this)">📚 Тақырыптар</button>
+    <button class="dash-tab" onclick="switchTab('recommendations', this)">💡 Ұсыныстар</button>
+  </div>
+
+  <!-- ============ TAB: OVERVIEW ============ -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <!-- Overview cards -->
+    <div class="overview-cards">
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE)">🎓</div>
+        <div>
+          <div class="overview-card-val" id="ov-level">1</div>
+          <div class="overview-card-label">Ағымдағы деңгей</div>
+          <div class="overview-card-trend trend-up" id="ov-level-title">🌱 Жаңадан бастаушы</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A)">⭐</div>
+        <div>
+          <div class="overview-card-val" id="ov-points">0</div>
+          <div class="overview-card-label">Жалпы ұпай</div>
+          <div class="overview-card-trend trend-up" id="ov-xp">0 XP жинаған</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0)">📚</div>
+        <div>
+          <div class="overview-card-val" id="ov-topics">0/6</div>
+          <div class="overview-card-label">Аяқталған тақырып</div>
+          <div class="overview-card-trend" id="ov-topics-detail" style="color:var(--text-muted)">Үйренуде...</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#CFFAFE,#A5F3FC)">🎯</div>
+        <div>
+          <div class="overview-card-val" id="ov-acc">0%</div>
+          <div class="overview-card-label">Дұрыс жауап пайызы</div>
+          <div class="overview-card-trend" id="ov-answers" style="color:var(--text-muted)">0 сұраққа жауап</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#FEE2E2,#FECACA)">🔥</div>
+        <div>
+          <div class="overview-card-val" id="ov-streak">0</div>
+          <div class="overview-card-label">Ең жоғары стрейк</div>
+          <div class="overview-card-trend trend-up">Дұрыс жауап қатары</div>
+        </div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon" style="background:linear-gradient(135deg,#FCE7F3,#FBCFE8)">🏆</div>
+        <div>
+          <div class="overview-card-val" id="ov-badges">0</div>
+          <div class="overview-card-label">Жетістік белгілері</div>
+          <div class="overview-card-trend" style="color:var(--text-muted)">Барлығы: 10</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student detail table -->
+    <div class="student-table-wrap">
+      <div class="table-toolbar">
+        <h3>🧑‍💻 Оқушы Есебі</h3>
+        <span id="student-name-display" style="font-weight:700;color:var(--primary)">Оқушы жоқ</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Тақырып</th>
+            <th>Теория</th>
+            <th>Ойын</th>
+            <th>Балл</th>
+            <th>Прогресс</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody id="teacher-table-body">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Badges achieved -->
+    <div style="background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-top:24px">
+      <h3 style="font-family:var(--font-display);color:var(--primary);margin-bottom:20px;font-size:1.2rem">🏆 Жинаған жетістіктер</h3>
+      <div id="teacher-badges-display" style="display:flex;flex-wrap:wrap;gap:12px"></div>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB: TOPICS ============ -->
+  <div class="tab-panel" id="tab-topics">
+    <h2 class="section-title" style="margin-bottom:8px">📚 Тақырыптар бойынша талдау</h2>
+    <p class="section-subtitle" style="margin-bottom:24px">Қай тақырып жақсы меңгерілді, қайсысы әлі аяқталмаған</p>
+    <div class="topic-completion-grid" id="topic-completion-grid"></div>
+
+    <!-- Recommendations inline -->
+    <div style="background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)">
+      <h3 style="font-family:var(--font-display);color:var(--primary);margin-bottom:20px">📋 Тақырып бойынша балл кестесі</h3>
+      <div id="topic-score-table"></div>
+    </div>
+  </div>
+
+  <!-- ============ TAB: RECOMMENDATIONS ============ -->
+  <div class="tab-panel" id="tab-recommendations">
+    <h2 class="section-title" style="margin-bottom:8px">💡 Педагогикалық ұсыныстар</h2>
+    <p class="section-subtitle" style="margin-bottom:24px">Деректерге негізделген ұсыныстар</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="rec-card">
+        <h3>📌 Оқушыға ұсыныстар</h3>
+        <div id="student-recs"></div>
+      </div>
+      <div class="rec-card">
+        <h3>🎓 Мұғалімге ұсыныстар</h3>
+        <div>
+          <div class="rec-item">
+            <div class="rec-icon" style="background:#EDE9FE">💬</div>
+            <div>
+              <div class="rec-title">Ойын-сабақ өткізу</div>
+              <div class="rec-desc">Платформадағы ойындарды сыныпта топтық формада өткізіп, бәсекелестік рухты пайдаланыңыз.</div>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon" style="background:#D1FAE5">🎯</div>
+            <div>
+              <div class="rec-title">Дифференциалды оқыту</div>
+              <div class="rec-desc">Жоғары деңгейлі оқушыларға күрделі жаттығулар, бастауыштарға теорияны алдымен оқыту.</div>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon" style="background:#FEF3C7">⭐</div>
+            <div>
+              <div class="rec-title">Марапаттау жүйесі</div>
+              <div class="rec-desc">Жоғары ұпай жинаған оқушыларды сынып алдында марапаттап, ынталандырыңыз.</div>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon" style="background:#CFFAFE">📊</div>
+            <div>
+              <div class="rec-title">Апталық бақылау</div>
+              <div class="rec-desc">Оқушының прогрессін апта сайын бақылап, ата-анасына есеп беріңіз.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gamification tips -->
+    <div style="background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:var(--radius);padding:36px;margin-top:24px;color:white">
+      <h3 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:20px">🎮 Геймификация туралы</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:20px">
+          <div style="font-size:2rem;margin-bottom:8px">🏆</div>
+          <div style="font-weight:800;margin-bottom:6px">Ұпай жүйесі</div>
+          <div style="opacity:0.9;font-size:0.9rem;line-height:1.5">Оқушылардың ынтасын арттырудың ең тиімді жолы — баллдар мен жетістіктер.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:20px">
+          <div style="font-size:2rem;margin-bottom:8px">🧠</div>
+          <div style="font-weight:800;margin-bottom:6px">Белсенді оқыту</div>
+          <div style="opacity:0.9;font-size:0.9rem;line-height:1.5">Ойын элементтері оқушының материалды 40%-ға жақсы есте сақтауына ықпал етеді.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:20px">
+          <div style="font-size:2rem;margin-bottom:8px">🔄</div>
+          <div style="font-weight:800;margin-bottom:6px">Жедел жауап</div>
+          <div style="opacity:0.9;font-size:0.9rem;line-height:1.5">Дұрыс/қате жауапқа бірден берілетін кері байланыс үйренуді жылдамдатады.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:20px">
+          <div style="font-size:2rem;margin-bottom:8px">📈</div>
+          <div style="font-weight:800;margin-bottom:6px">Деңгей жүйесі</div>
+          <div style="opacity:0.9;font-size:0.9rem;line-height:1.5">Деңгейлік ілгерілеу оқушыны одан арыда жалғастыруға ынталандырады.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/games.js"></script>
+<script>
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function renderTeacherDashboard() {
+    const s = APP.state;
+    const lvl = getLevel(s.xp);
+    const topicsDone = Object.values(s.topics).filter(t => t.theory && t.game).length;
+    const theoryDone = Object.values(s.topics).filter(t => t.theory).length;
+    const gameDone   = Object.values(s.topics).filter(t => t.game).length;
+    const acc = s.totalAnswered > 0 ? Math.round(s.correctAnswers / s.totalAnswered * 100) : 0;
+
+    const el = id => document.getElementById(id);
+
+    // Overview
+    if (el('ov-level'))        el('ov-level').textContent       = lvl.level;
+    if (el('ov-level-title'))  el('ov-level-title').textContent  = lvl.title;
+    if (el('ov-points'))       el('ov-points').textContent       = s.points;
+    if (el('ov-xp'))           el('ov-xp').textContent           = `${s.xp} XP жинаған`;
+    if (el('ov-topics'))       el('ov-topics').textContent       = `${topicsDone}/6`;
+    if (el('ov-topics-detail')) el('ov-topics-detail').textContent = `📖 ${theoryDone} теория, 🎮 ${gameDone} ойын`;
+    if (el('ov-acc'))          el('ov-acc').textContent          = acc + '%';
+    if (el('ov-answers'))      el('ov-answers').textContent      = `${s.totalAnswered} сұраққа жауап`;
+    if (el('ov-streak'))       el('ov-streak').textContent       = s.streak;
+    if (el('ov-badges'))       el('ov-badges').textContent       = s.badges.length;
+
+    // Student name
+    if (el('student-name-display')) {
+      el('student-name-display').textContent = s.name ? `Оқушы: ${s.name}` : 'Оқушы аты белгісіз';
+    }
+
+    // Table
+    const topicMeta = {
+      ergonomics: { icon:'🖥️', name:'Эргономика' },
+      history:    { icon:'📜', name:'ЕТ Тарихы' },
+      computer:   { icon:'⚙️', name:'Компьютер' },
+      wireless:   { icon:'📡', name:'Сымсыз желілер' },
+      encryption: { icon:'🔐', name:'Шифрлау' },
+      binary:     { icon:'💻', name:'Екілік код' },
+    };
+
+    const tbody = el('teacher-table-body');
+    if (tbody) {
+      tbody.innerHTML = Object.entries(s.topics).map(([id, data]) => {
+        const meta = topicMeta[id];
+        const pct = Math.round((data.score / data.maxScore) * 100);
+        const status = data.theory && data.game ? 'done' : (data.theory || data.game) ? 'in-progress' : 'pending';
+        const statusLabels = { done: '✅ Аяқталды', 'in-progress': '⏳ Үйренуде', pending: '○ Басталмаған' };
+        const statusColors = { done: '#065F46', 'in-progress': '#5B21B6', pending: '#6B7280' };
+
+        return `
+          <tr>
+            <td><span style="font-size:1.1rem">${meta.icon}</span> ${meta.name}</td>
+            <td>${data.theory ? '<span style="color:#059669;font-weight:800">✅ Оқыды</span>' : '<span style="color:#9CA3AF">○ Жоқ</span>'}</td>
+            <td>${data.game ? '<span style="color:#059669;font-weight:800">✅ Ойнады</span>' : '<span style="color:#9CA3AF">○ Жоқ</span>'}</td>
+            <td><strong>${data.score || 0}</strong> / ${data.maxScore}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;min-width:120px">
+                <div style="flex:1;height:8px;background:var(--bg-alt);border-radius:10px;overflow:hidden">
+                  <div style="height:100%;background:linear-gradient(90deg,#7C3AED,#06B6D4);border-radius:10px;width:${pct}%;transition:width 1s"></div>
+                </div>
+                <span style="font-size:0.8rem;font-weight:800;color:var(--primary)">${pct}%</span>
+              </div>
+            </td>
+            <td><span style="font-weight:800;color:${statusColors[status]}">${statusLabels[status]}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Badges
+    const badgesDisplay = el('teacher-badges-display');
+    if (badgesDisplay) {
+      if (s.badges.length === 0) {
+        badgesDisplay.innerHTML = '<p style="color:var(--text-muted);font-weight:600">Әзірге жетістік жоқ</p>';
+      } else {
+        badgesDisplay.innerHTML = ALL_BADGES
+          .filter(b => s.badges.includes(b.id))
+          .map(b => `
+            <div class="badge-item unlocked">
+              <span class="badge-icon">${b.icon}</span>
+              <span class="badge-name">${b.name}</span>
+              <span class="badge-desc">${b.desc}</span>
+            </div>
+          `).join('');
+      }
+    }
+
+    // Topic completion grid
+    const colors = ['#7C3AED','#2563EB','#059669','#D97706','#DB2777','#0891B2'];
+    const topicGrid = el('topic-completion-grid');
+    if (topicGrid) {
+      topicGrid.innerHTML = Object.entries(s.topics).map(([id, data], i) => {
+        const meta = topicMeta[id];
+        const pct = Math.round((data.score / data.maxScore) * 100);
+        return `
+          <div class="topic-completion-card">
+            <div class="tc-top">
+              <div class="tc-icon" style="background:${colors[i]}20;color:${colors[i]}">${meta.icon}</div>
+              <div class="tc-name">${meta.name}</div>
+            </div>
+            <div class="tc-bar-wrap">
+              <div class="tc-bar">
+                <div class="tc-fill" style="background:${colors[i]};width:${pct}%"></div>
+              </div>
+            </div>
+            <div class="tc-stats">
+              <span>Балл: ${data.score || 0}/${data.maxScore}</span>
+              <span>${pct}%</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:10px">
+              <span style="background:${data.theory ? '#D1FAE5' : 'var(--bg-alt)'};color:${data.theory?'#065F46':'var(--text-muted)'};padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:800">
+                ${data.theory ? '✅' : '○'} Теория
+              </span>
+              <span style="background:${data.game ? '#D1FAE5' : 'var(--bg-alt)'};color:${data.game?'#065F46':'var(--text-muted)'};padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:800">
+                ${data.game ? '✅' : '○'} Ойын
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Topic score table
+    const scoreTable = el('topic-score-table');
+    if (scoreTable) {
+      scoreTable.innerHTML = `
+        <table>
+          <thead><tr>
+            <th>#</th><th>Тақырып</th><th>Балл</th><th>Макс</th><th>Пайыз</th><th>Теория</th><th>Ойын</th>
+          </tr></thead>
+          <tbody>
+            ${Object.entries(s.topics).map(([id, data], i) => {
+              const meta = topicMeta[id];
+              const pct = Math.round((data.score / data.maxScore) * 100);
+              return `
+                <tr>
+                  <td><span class="rank-badge ${i<3?'rank-'+(i+1):'rank-other'}">${i+1}</span></td>
+                  <td>${meta.icon} ${meta.name}</td>
+                  <td><strong>${data.score || 0}</strong></td>
+                  <td>${data.maxScore}</td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="width:80px;height:8px;background:var(--bg-alt);border-radius:6px;overflow:hidden">
+                        <div style="height:100%;background:linear-gradient(90deg,#7C3AED,#06B6D4);width:${pct}%"></div>
+                      </div>
+                      <strong style="color:var(--primary)">${pct}%</strong>
+                    </div>
+                  </td>
+                  <td>${data.theory ? '✅' : '—'}</td>
+                  <td>${data.game ? '✅' : '—'}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Student recommendations
+    const studentRecs = el('student-recs');
+    if (studentRecs) {
+      const recs = [];
+      const theoryNotDone = Object.entries(s.topics).filter(([id,d]) => !d.theory).map(([id]) => topicMeta[id].name);
+      const gameNotDone   = Object.entries(s.topics).filter(([id,d]) => !d.game).map(([id]) => topicMeta[id].name);
+
+      if (theoryNotDone.length > 0) {
+        recs.push({ icon:'📖', bg:'#EDE9FE', title:'Теорияны аяқта', desc:`${theoryNotDone.slice(0,2).join(', ')} тақырыптарының теориясын оқу керек.` });
+      }
+      if (gameNotDone.length > 0) {
+        recs.push({ icon:'🎮', bg:'#D1FAE5', title:'Ойынды жалғастыр', desc:`${gameNotDone.slice(0,2).join(', ')} тақырыптарының ойынын ойнаңыз.` });
+      }
+      if (s.badges.length < 3) {
+        recs.push({ icon:'🏆', bg:'#FEF3C7', title:'Жетістік жина', desc:'Көбірек тапсырма орында — жаңа белгілерді жинай!.' });
+      }
+      if (acc < 70 && s.totalAnswered > 0) {
+        recs.push({ icon:'📚', bg:'#FEE2E2', title:'Алдымен теорияны оқы', desc:'Дұрыс жауап пайызы төмен. Алдымен теорияны оқып шық, содан кейін ойын ойна.' });
+      }
+      if (recs.length === 0) {
+        recs.push({ icon:'🌟', bg:'#D1FAE5', title:'Тамаша нәтиже!', desc:'Барлық тақырыпты жақсы меңгердіңіз. Ойындарды қайталаңыз!' });
+      }
+
+      studentRecs.innerHTML = recs.map(r => `
+        <div class="rec-item">
+          <div class="rec-icon" style="background:${r.bg}">${r.icon}</div>
+          <div>
+            <div class="rec-title">${r.title}</div>
+            <div class="rec-desc">${r.desc}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  function exportData() {
+    const s = APP.state;
+    const lvl = getLevel(s.xp);
+    const json = JSON.stringify({ ...s, levelTitle: lvl.title }, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `cybergame_${s.name || 'student'}_report.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📥', 'Экспорт дайын!', 'JSON файлы жүктелді');
+  }
+
+  document.addEventListener('DOMContentLoaded', renderTeacherDashboard);
+</script>
+
+</body>
+</html>

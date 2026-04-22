@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="КиберОйын — 6-сынып оқушыларына арналған геймификациялық білім беру платформасы. Информатиканы ойын арқылы үйрен!">
+  <title>КиберОйын — Білім беру платформасы</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🎮</div>
+    КиберОйын
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">🏠 Басты бет</a></li>
+    <li><a href="theory.html">📚 Теория</a></li>
+    <li><a href="games.html">🎮 Ойындар</a></li>
+    <li><a href="progress.html">📊 Прогресс</a></li>
+    <li><a href="teacher.html">👩‍🏫 Мұғалім</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <div class="nav-score" id="nav-score">⭐ 0</div>
+    <div class="nav-level" id="nav-level">🏅 Деңгей 1</div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Тема ауыстыру">
+      <span id="theme-icon">🌙</span>
+    </button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html">🏠 Басты бет</a>
+  <a href="theory.html">📚 Теория</a>
+  <a href="games.html">🎮 Ойындар</a>
+  <a href="progress.html">📊 Прогресс</a>
+  <a href="teacher.html">👩‍🏫 Мұғалім</a>
+</div>
+
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section class="hero">
+  <!-- Floating decorative elements -->
+  <div class="hero-floats">
+    <span class="hero-float" style="top:15%;left:5%;animation-delay:0s">💻</span>
+    <span class="hero-float" style="top:60%;left:8%;animation-delay:1s">🎮</span>
+    <span class="hero-float" style="top:25%;right:6%;animation-delay:2s">🚀</span>
+    <span class="hero-float" style="top:70%;right:10%;animation-delay:0.5s">⭐</span>
+    <span class="hero-float" style="top:40%;left:50%;animation-delay:1.5s">🔐</span>
+    <span class="hero-float" style="top:10%;right:25%;animation-delay:3s">📡</span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      🎓 6-сынып оқушыларына арналған
+    </div>
+    <h1>Ойын арқылы<br>Информатиканы<br>үйрен! 🚀</h1>
+    <p>
+      Тесттер, ойындар, жетістіктер — информатика пәнін
+      қызықты және ұмытылмас ету үшін жасалған платформа!
+    </p>
+    <div class="hero-buttons">
+      <a href="games.html" class="btn-hero btn-hero-primary">
+        🎮 Ойынды бастау
+      </a>
+      <a href="theory.html" class="btn-hero btn-hero-secondary">
+        📚 Теорияны оқу
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PLAYER CARD
+     ============================================================ -->
+<section class="player-section">
+  <h2 class="section-title">👤 Менің профилім</h2>
+  <p class="section-subtitle">Прогрессіңді бақылап отыр!</p>
+
+  <div class="player-card">
+    <div class="player-avatar">🧑‍💻</div>
+    <div class="player-info">
+      <h3 id="player-name-display">Оқушы</h3>
+      <div class="player-title" id="player-level-title">🌱 Жаңадан бастаушы</div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar">
+          <div class="xp-fill" id="xp-fill" style="width:0%"></div>
+        </div>
+        <span class="xp-text" id="xp-text">0 / 100 XP</span>
+      </div>
+    </div>
+    <div class="player-stats">
+      <div class="stat-pill points">⭐ <span id="player-points-val">0</span> ұпай</div>
+      <div class="stat-pill level">🏅 Деңгей <span id="player-level-val">1</span></div>
+      <div class="stat-pill streak">🔥 <span id="player-streak-val">0</span> стрейк</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUICK STATS
+     ============================================================ -->
+<section style="max-width:1200px;margin:0 auto;padding:0 24px 48px">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">📚</span>
+      <span class="stat-value" id="stat-topics-done">0</span>
+      <span class="stat-label">Аяқталған тақырып</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🏆</span>
+      <span class="stat-value" id="stat-badges">0</span>
+      <span class="stat-label">Жетістік белгі</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🎯</span>
+      <span class="stat-value" id="stat-accuracy">0%</span>
+      <span class="stat-label">Дұрыс жауап %</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⭐</span>
+      <span class="stat-value" id="stat-total-score">0</span>
+      <span class="stat-label">Жалпы ұпай</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TOPICS OVERVIEW
+     ============================================================ -->
+<section class="topics-section">
+  <h2 class="section-title">📖 Тақырыптар</h2>
+  <p class="section-subtitle">6 тақырып — теория мен ойынмен!</p>
+
+  <div class="topics-grid" id="topics-grid">
+    <!-- Rendered by JS below -->
+  </div>
+</section>
+
+<!-- ============================================================
+     BADGES SECTION
+     ============================================================ -->
+<section class="badges-section">
+  <h2 class="section-title">🏆 Жетістіктер</h2>
+  <p class="section-subtitle">Оқу арқылы жаңа белгілер жинай!</p>
+  <div class="badges-grid" id="badges-grid"></div>
+</section>
+
+<!-- ============================================================
+     THEORY MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="theory-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h2 id="theory-modal-title">Теория</h2>
+      <button class="modal-close" onclick="closeModal('theory-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="theory-modal-body"></div>
+    <div style="padding:0 28px 28px">
+      <button class="btn btn-primary btn-full" onclick="closeModal('theory-modal')">
+        ✅ Оқып шықтым!
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     GAME MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="game-modal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h2>🎮 Ойын</h2>
+      <button class="modal-close" onclick="closeModal('game-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="game-modal-body">
+      <!-- Game content rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     WELCOME MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="welcome-modal">
+  <div class="modal" style="max-width:500px">
+    <div class="welcome-modal">
+      <span class="welcome-emoji">🎮</span>
+      <h2>КиберОйынға қош келдің!</h2>
+      <p>
+        Информатиканы ойын арқылы үйрен.<br>
+        Атыңды енгіз және бастай!
+      </p>
+      <input
+        type="text"
+        class="name-input"
+        id="player-name-input"
+        placeholder="Атыңды жаз... (мысалы: Нұрлан)"
+        maxlength="20"
+        onkeydown="if(event.key==='Enter') submitName()"
+      >
+      <button class="btn btn-primary btn-full btn-lg" onclick="submitName()">
+        🚀 Бастау!
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="js/app.js"></script>
+<script src="js/games.js"></script>
+<script>
+  // ---- Render topics grid ----
+  function renderTopicsGrid() {
+    const grid = document.getElementById('topics-grid');
+    if (!grid) return;
+
+    const topicList = Object.values(TOPICS);
+    grid.innerHTML = topicList.map(topic => {
+      const s = APP.state.topics[topic.id];
+      const pct = s ? Math.round((s.score / s.maxScore) * 100) : 0;
+      const theoryDone = s?.theory;
+      const gameDone   = s?.game;
+
+      return `
+        <div class="topic-card">
+          <div class="topic-card-header ${topic.colorClass}">
+            <div class="topic-card-icon ${topic.iconClass}">${topic.icon}</div>
+            <div>
+              <div class="topic-card-title">${topic.title}</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px">
+                ${theoryDone ? '✅ Теория' : '○ Теория'} &nbsp; ${gameDone ? '✅ Ойын' : '○ Ойын'}
+              </div>
+            </div>
+          </div>
+          <div class="topic-card-body">
+            <p class="topic-card-desc">${getTopicDesc(topic.id)}</p>
+            <div class="topic-progress-bar">
+              <div class="topic-progress-fill ${topic.progressClass}" id="progress-${topic.id}" style="width:${pct}%"></div>
+            </div>
+            <div class="topic-progress-text">
+              <span>Прогресс</span>
+              <span id="progress-text-${topic.id}">${pct}%</span>
+            </div>
+          </div>
+          <div class="topic-card-footer">
+            <button class="topic-btn topic-btn-theory" onclick="openTheory('${topic.id}')">📖 Теория</button>
+            <button class="topic-btn topic-btn-game" onclick="openGameMenu('${topic.id}')">🎮 Ойын</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function getTopicDesc(id) {
+    const descs = {
+      ergonomics:  'Жұмыс орнын дұрыс ұйымдастыру — денсаулық пен тиімділік кілті.',
+      history:     'Компьютерлердің пайда болуынан бүгінге дейінгі эволюция.',
+      computer:    'CPU, RAM, GPU — компьютердің ішкі дүниесі.',
+      wireless:    'Wi-Fi, Bluetooth — сымсыз дүниенің сыры.',
+      encryption:  'Деректерді қорғаудың ең маңызды әдісі.',
+      binary:      '0 мен 1 — компьютерлердің тілі.',
+    };
+    return descs[id] || '';
+  }
+
+  // ---- Game Menu ----
+  function openGameMenu(topicId) {
+    const modal = document.getElementById('game-modal-body');
+    const topic = TOPICS[topicId];
+    if (!modal || !topic) return;
+
+    modal.innerHTML = `
+      <div style="padding:20px">
+        <h3 style="font-family:var(--font-display);color:var(--primary);margin-bottom:20px;font-size:1.3rem">
+          🎮 ${topic.title} — Ойын таңда
+        </h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <button class="btn btn-primary" onclick="startQuiz('${topicId}')">
+            🎯 Quiz тест
+          </button>
+          <button class="btn btn-warning" onclick="startTrueFalse('${topicId}')">
+            ✅ Рас / Жалған
+          </button>
+          <button class="btn btn-success" onclick="startDragDrop('${topicId}')">
+            🔗 Сәйкестендіру
+          </button>
+          <button class="btn btn-secondary" onclick="startMemoryGame()">
+            🧠 Жад ойыны
+          </button>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-primary btn-full" onclick="startPuzzle()">
+            🧩 Пазл ойыны
+          </button>
+        </div>
+        <div style="margin-top:16px">
+          <button class="btn btn-secondary btn-full" onclick="closeModal('game-modal')">❌ Жабу</button>
+        </div>
+      </div>
+    `;
+    openModal('game-modal');
+  }
+
+  // ---- Render badges ----
+  function renderBadges() {
+    const grid = document.getElementById('badges-grid');
+    if (!grid) return;
+    const s = APP.state;
+    grid.innerHTML = ALL_BADGES.map(b => `
+      <div class="badge-item ${s.badges.includes(b.id) ? 'unlocked' : 'locked'}" title="${b.desc}">
+        <span class="badge-icon">${b.icon}</span>
+        <span class="badge-name">${b.name}</span>
+        <span class="badge-desc">${s.badges.includes(b.id) ? b.desc : '🔒 Жабық'}</span>
+      </div>
+    `).join('');
+  }
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTopicsGrid();
+    renderBadges();
+  });
+
+  // Re-render after actions
+  const _origAward = window.awardPoints;
+  window.awardPoints = function(...args) {
+    _origAward(...args);
+    setTimeout(() => {
+      renderTopicsGrid();
+      renderBadges();
+      updateStats();
+    }, 600);
+  };
+</script>
+
+</body>
+</html>

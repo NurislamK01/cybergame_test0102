@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="КиберОйын — Теория бөлімі. Информатика тақырыптары бойынша қысқаша теория мен мысалдар.">
+  <title>Теория — КиберОйын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Theory page specific */
+    .theory-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .theory-hero {
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      color: white;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .theory-hero::before {
+      content: '📚';
+      position: absolute;
+      right: 40px;
+      font-size: 8rem;
+      opacity: 0.15;
+    }
+
+    .theory-hero h1 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+
+    .theory-hero p {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* Topic detail cards */
+    .theory-topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 28px;
+    }
+
+    .theory-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .theory-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .theory-card-top {
+      padding: 28px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .theory-card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .theory-card-meta h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .theory-card-meta .topic-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .theory-card-body {
+      padding: 20px 28px;
+    }
+
+    .theory-card-body p {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .theory-key-points {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .key-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .key-point-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .theory-card-footer {
+      padding: 16px 28px 28px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .theory-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .theory-status-badge.read {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .theory-status-badge.unread {
+      background: var(--bg-alt);
+      color: var(--text-muted);
+    }
+
+    /* Filter tabs */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Reading modal extra styling */
+    .reading-progress {
+      height: 6px;
+      background: var(--bg-alt);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .reading-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+
+    .chapter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--bg-alt);
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .theory-hero { flex-direction: column; padding: 32px 24px; }
+      .theory-hero h1 { font-size: 1.7rem; }
+      .theory-topic-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🎮</div>
+    КиберОйын
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Басты бет</a></li>
+    <li><a href="theory.html" class="active">📚 Теория</a></li>
+    <li><a href="games.html">🎮 Ойындар</a></li>
+    <li><a href="progress.html">📊 Прогресс</a></li>
+    <li><a href="teacher.html">👩‍🏫 Мұғалім</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="nav-score" id="nav-score">⭐ 0</div>
+    <div class="nav-level" id="nav-level">🏅 Деңгей 1</div>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html">🏠 Басты бет</a>
+  <a href="theory.html">📚 Теория</a>
+  <a href="games.html">🎮 Ойындар</a>
+  <a href="progress.html">📊 Прогресс</a>
+  <a href="teacher.html">👩‍🏫 Мұғалім</a>
+</div>
+
+<!-- THEORY PAGE -->
+<div class="theory-page">
+
+  <!-- Hero -->
+  <div class="theory-hero">
+    <div>
+      <h1>📚 Теория бөлімі</h1>
+      <p>
+        6 тақырып бойынша қысқаша және түсінікті теория.
+        Оқып болған соң ойын ойна — ұпай жина!
+      </p>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">
+          📖 6 тақырып
+        </div>
+        <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">
+          ⭐ Тақырып үшін +30 ұпай
+        </div>
+        <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">
+          🎯 Ойынмен бекіт
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <span class="filter-label">Сүзу:</span>
+    <button class="tab-btn active" onclick="filterTopics('all', this)">📋 Барлығы</button>
+    <button class="tab-btn" onclick="filterTopics('unread', this)">📌 Оқылмаған</button>
+    <button class="tab-btn" onclick="filterTopics('read', this)">✅ Оқылған</button>
+  </div>
+
+  <!-- Topics -->
+  <div class="theory-topic-grid" id="theory-grid"></div>
+
+</div>
+
+<!-- THEORY DETAIL MODAL -->
+<div class="modal-overlay" id="theory-modal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-header">
+      <div>
+        <p class="chapter-tag" id="modal-chapter-tag">📖 Тақырып</p>
+        <h2 id="theory-modal-title">Теория</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal('theory-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="reading-progress">
+        <div class="reading-progress-fill" id="reading-progress" style="width:0%"></div>
+      </div>
+      <div class="theory-content" id="theory-modal-body"></div>
+    </div>
+    <div style="padding:20px 28px 28px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" id="open-game-btn" style="flex:1" onclick="goToGame()">
+        🎮 Ойын ойна!
+      </button>
+      <button class="btn btn-secondary" onclick="closeModal('theory-modal')">
+        ✕ Жабу
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME MODAL -->
+<div class="modal-overlay" id="game-modal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h2>🎮 Ойын</h2>
+      <button class="modal-close" onclick="closeModal('game-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="game-modal-body"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/games.js"></script>
+<script>
+  let currentTopicId = null;
+
+  // ---- Render theory cards ----
+  function renderTheoryGrid(filter = 'all') {
+    const grid = document.getElementById('theory-grid');
+    if (!grid) return;
+
+    const topicNums = { ergonomics:'1', history:'2', computer:'3', wireless:'4', encryption:'5', binary:'6' };
+
+    const keyPoints = {
+      ergonomics:  ['Монитор қашықтығы: 50–70 см', 'Тізе бұрышы: 90°', 'Жарық: сол жақтан', 'Үзіліс: 45 минут сайын'],
+      history:     ['1-ші ұрпақ: вакуум шамдары', '2-ші ұрпақ: транзисторлар', '3-ші ұрпақ: IC схемалар', '5-ші ұрпақ: ЖИ + нейрожелілер'],
+      computer:    ['CPU — есептеу бірлігі', 'RAM — уақытша жады', 'SSD/HDD — тұрақты жады', 'GPU — графика'],
+      wireless:    ['Wi-Fi: 50–100м ауқым', 'Bluetooth: ~10м', '2.4 ГГц vs 5 ГГц', 'Радиотолқын негізінде'],
+      encryption:  ['Симметриялы: AES', 'Асимметриялы: RSA', 'Цезарь шифры — ығыстыру', 'Хэш — бір бағытты'],
+      binary:      ['Бит = 0 немесе 1', '1 байт = 8 бит', '1 Кб = 1024 байт', 'ASCII: A=65=01000001'],
+    };
+
+    const pointIcons = {
+      ergonomics:'🖥️', history:'📜', computer:'⚙️', wireless:'📡', encryption:'🔐', binary:'💻'
+    };
+
+    const descs = {
+      ergonomics:  'Жұмыс орнын дұрыс ұйымдастыру — денсаулық пен тиімділіктің кілті. Мойын мен көздің шаршамауы үшін ережелер.',
+      history:     'Компьютерлердің алғашқы электрондық нұсқаларынан бүгінгі жасанды интеллектке дейінгі ұзақ жол.',
+      computer:    'Процессор, жады, диск — компьютер қандай бөлшектерден тұрады және олар бірге қалай жұмыс жасайды.',
+      wireless:    'Сымсыз технологиялар — Wi-Fi, Bluetooth, 5G. Олар қалай жұмыс жасайды?',
+      encryption:  'Деректерді қорғаудың маңызды әдісі. Шифрлау кілттері мен алгоритмдер туралы.',
+      binary:      'Компьютерлердің тілі — 0 және 1. Бинарлық жүйе, биттер, байттар және аударулар.',
+    };
+
+    const topicList = Object.values(TOPICS);
+    const s = APP.state;
+
+    const filtered = topicList.filter(t => {
+      const isRead = s.topics[t.id]?.theory;
+      if (filter === 'read') return isRead;
+      if (filter === 'unread') return !isRead;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)">
+        <div style="font-size:4rem;margin-bottom:16px">📭</div>
+        <p style="font-weight:700">Бұл санатта тақырып жоқ</p>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(topic => {
+      const isRead = s.topics[topic.id]?.theory;
+      const num = topicNums[topic.id];
+
+      return `
+        <div class="theory-card" id="theory-card-${topic.id}">
+          <div class="theory-card-top">
+            <div class="theory-card-icon ${topic.iconClass}" style="font-size:1.8rem">${topic.icon}</div>
+            <div class="theory-card-meta">
+              <div class="topic-num">Тақырып ${num}</div>
+              <h3>${topic.title}</h3>
+              <span class="theory-status-badge ${isRead ? 'read' : 'unread'}">
+                ${isRead ? '✅ Оқылған' : '📖 Оқылмаған'}
+              </span>
+            </div>
+          </div>
+
+          <div class="theory-card-body">
+            <p>${descs[topic.id]}</p>
+
+            <div class="theory-key-points">
+              ${keyPoints[topic.id].map(kp => `
+                <div class="key-point">
+                  <div class="key-point-icon ${topic.iconClass}">✓</div>
+                  <span>${kp}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="theory-card-footer">
+            <button class="btn btn-primary" style="flex:1" onclick="readTheory('${topic.id}')">
+              ${isRead ? '🔄 Қайта оқу' : '📖 Теорияны оқу'} ${isRead ? '' : '+30⭐'}
+            </button>
+            <button class="btn btn-secondary" onclick="openGameMenu('${topic.id}')">
+              🎮
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function filterTopics(filter, btn) {
+    document.querySelectorAll('.filter-bar .tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTheoryGrid(filter);
+  }
+
+  function readTheory(topicId) {
+    currentTopicId = topicId;
+    const topic = TOPICS[topicId];
+    const topicNums = { ergonomics:'1', history:'2', computer:'3', wireless:'4', encryption:'5', binary:'6' };
+
+    document.getElementById('modal-chapter-tag').textContent = `📖 Тақырып ${topicNums[topicId]}`;
+    document.getElementById('theory-modal-title').textContent = topic.theory.title;
+    document.getElementById('theory-modal-body').innerHTML = `<div class="theory-content">${topic.theory.body}</div>`;
+
+    // Animate reading progress bar
+    const fill = document.getElementById('reading-progress');
+    if (fill) { fill.style.width = '0%'; setTimeout(() => fill.style.width = '100%', 200); }
+
+    // Award points if first time
+    const s = APP.state;
+    const wasRead = s.topics[topicId]?.theory;
+    if (!wasRead) {
+      if (s.topics[topicId]) {
+        s.topics[topicId].theory = true;
+        s.topics[topicId].score = Math.max(s.topics[topicId].score || 0, 30);
+      }
+      APP.save();
+      setTimeout(() => {
+        awardPoints(30, 20, `${topic.title} теориясын оқыдың!`);
+        renderTheoryGrid();
+      }, 500);
+    }
+
+    openModal('theory-modal');
+  }
+
+  function goToGame() {
+    closeModal('theory-modal');
+    if (currentTopicId) {
+      setTimeout(() => openGameMenu(currentTopicId), 300);
+    }
+  }
+
+  function openGameMenu(topicId) {
+    currentTopicId = topicId;
+    const modal = document.getElementById('game-modal-body');
+    const topic = TOPICS[topicId];
+    if (!modal || !topic) return;
+
+    modal.innerHTML = `
+      <div style="padding:20px">
+        <h3 style="font-family:var(--font-display);color:var(--primary);margin-bottom:8px;font-size:1.3rem">
+          🎮 ${topic.title}
+        </h3>
+        <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.9rem">Ойын түрін таңда:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <button class="btn btn-primary" onclick="startQuiz('${topicId}')">🎯 Quiz тест</button>
+          <button class="btn btn-warning" onclick="startTrueFalse('${topicId}')">✅ Рас/Жалған</button>
+          <button class="btn btn-success" onclick="startDragDrop('${topicId}')">🔗 Сәйкестендіру</button>
+          <button class="btn btn-secondary" onclick="startMemoryGame()">🧠 Жад ойыны</button>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-primary btn-full" onclick="startPuzzle()">🧩 Пазл ойыны</button>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-secondary btn-full" onclick="closeModal('game-modal')">❌ Болдырмау</button>
+        </div>
+      </div>
+    `;
+    openModal('game-modal');
+  }
+
+  document.addEventListener('DOMContentLoaded', renderTheoryGrid);
+</script>
+
+</body>
+</html>

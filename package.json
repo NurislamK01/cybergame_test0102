@@ -1,0 +1,12 @@
+{
+  "name": "cybergame-edu-platform",
+  "version": "1.0.0",
+  "description": "КиберОйын — 6-сынып оқушыларына арналған геймификациялық білім беру платформасы",
+  "scripts": {
+    "dev": "npx serve . -p 3000 --no-clipboard",
+    "start": "npx serve . -p 3000"
+  },
+  "keywords": ["education", "gamification", "kazakh", "informatics"],
+  "author": "KiberOyin",
+  "license": "MIT"
+}

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="КиберОйын — Ойындар бөлімі. Quiz, Drag&Drop, True/False, Memory, Puzzle ойындары.">
+  <title>Ойындар — КиберОйын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .games-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .games-hero {
+      background: linear-gradient(135deg, #06B6D4, #7C3AED);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      color: white;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .games-hero::before {
+      content: '🎮';
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 9rem;
+      opacity: 0.12;
+    }
+
+    .games-hero h1 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+
+    .games-hero p {
+      opacity: 0.9;
+      font-size: 1.05rem;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* Game Type Cards */
+    .game-types-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .game-type-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .game-type-card:hover,
+    .game-type-card.active {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .game-type-card.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .game-type-card.active .game-type-label {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .game-type-icon { font-size: 2.8rem; margin-bottom: 12px; display: block; }
+    .game-type-name { font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+    .game-type-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+
+    /* Topic selection for quick play */
+    .quick-play-section {
+      margin-bottom: 40px;
+    }
+
+    .quick-play-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .quick-topic-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .quick-topic-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow);
+    }
+
+    .quick-topic-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .quick-topic-name { font-weight: 800; font-size: 0.9rem; }
+
+    /* Featured game */
+    .featured-game {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 40px;
+    }
+
+    .featured-game h2 {
+      font-family: var(--font-display);
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .featured-game p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .game-rules {
+      background: var(--bg-alt);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .game-rules h4 {
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .game-rules ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .game-rules li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .rule-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Leaderboard mini */
+    .mini-leaderboard {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .mini-leaderboard h3 {
+      font-family: var(--font-display);
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lb-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lb-item:last-child { border-bottom: none; }
+
+    .lb-rank {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .lb-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .lb-info { flex: 1; }
+    .lb-name { font-weight: 800; font-size: 0.9rem; }
+    .lb-points { font-size: 0.8rem; color: var(--text-muted); }
+    .lb-score { font-weight: 900; color: var(--primary); }
+
+    @media (max-width: 600px) {
+      .games-hero { padding: 32px 24px; }
+      .games-hero h1 { font-size: 1.7rem; }
+      .game-types-grid { grid-template-columns: repeat(3, 1fr); }
+      .quick-play-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">🎮</div>
+    КиберОйын
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Басты бет</a></li>
+    <li><a href="theory.html">📚 Теория</a></li>
+    <li><a href="games.html" class="active">🎮 Ойындар</a></li>
+    <li><a href="progress.html">📊 Прогресс</a></li>
+    <li><a href="teacher.html">👩‍🏫 Мұғалім</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="nav-score" id="nav-score">⭐ 0</div>
+    <div class="nav-level" id="nav-level">🏅 Деңгей 1</div>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html">🏠 Басты бет</a>
+  <a href="theory.html">📚 Теория</a>
+  <a href="games.html">🎮 Ойындар</a>
+  <a href="progress.html">📊 Прогресс</a>
+  <a href="teacher.html">👩‍🏫 Мұғалім</a>
+</div>
+
+<!-- GAMES PAGE -->
+<div class="games-page">
+
+  <!-- Hero -->
+  <div class="games-hero">
+    <h1>🎮 Ойындар бөлімі</h1>
+    <p>5 түрлі ойын — Quiz, Рас/Жалған, Сәйкестендіру, Жад ойыны және Пазл. Ойынмен үйрен!</p>
+    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+      <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">🎯 5 ойын түрі</div>
+      <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">📚 6 тақырып</div>
+      <div style="background:rgba(255,255,255,0.2);padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9rem">⭐ Ұпай жина!</div>
+    </div>
+  </div>
+
+  <!-- Game Types -->
+  <h2 class="section-title">🕹️ Ойын түрлері</h2>
+  <p class="section-subtitle" style="margin-bottom:24px">Ойын түрін таңда, содан кейін тақырып!</p>
+
+  <div class="game-types-grid">
+    <div class="game-type-card active" id="gt-quiz" onclick="selectGameType('quiz', this)">
+      <span class="game-type-icon">🎯</span>
+      <div class="game-type-name">Quiz</div>
+      <div class="game-type-label">Тест сұрақтар</div>
+    </div>
+    <div class="game-type-card" id="gt-tf" onclick="selectGameType('tf', this)">
+      <span class="game-type-icon">✅</span>
+      <div class="game-type-name">Рас/Жалған</div>
+      <div class="game-type-label">True/False</div>
+    </div>
+    <div class="game-type-card" id="gt-dd" onclick="selectGameType('dd', this)">
+      <span class="game-type-icon">🔗</span>
+      <div class="game-type-name">Сәйкестендіру</div>
+      <div class="game-type-label">Drag & Drop</div>
+    </div>
+    <div class="game-type-card" id="gt-memory" onclick="selectGameType('memory', this)">
+      <span class="game-type-icon">🧠</span>
+      <div class="game-type-name">Жад ойыны</div>
+      <div class="game-type-label">Memory Game</div>
+    </div>
+    <div class="game-type-card" id="gt-puzzle" onclick="selectGameType('puzzle', this)">
+      <span class="game-type-icon">🧩</span>
+      <div class="game-type-name">Пазл</div>
+      <div class="game-type-label">Slider Puzzle</div>
+    </div>
+  </div>
+
+  <!-- Game Info & Launch -->
+  <div class="featured-game" id="game-info-card">
+    <h2 id="game-info-title">🎯 Quiz — Тест сұрақтар</h2>
+    <p id="game-info-desc">Тақырып бойынша 4 жауаптан тұратын тест ойыны. Дұрыс жауап берген сайын ұпай жинайсың! Жылдам ойла, дұрыс жауапта!</p>
+
+    <div class="game-rules">
+      <h4>📋 Ережелер</h4>
+      <ul id="game-rules-list">
+        <li><span class="rule-icon">1</span> 4 нұсқадан дұрыс жауапты таңда</li>
+        <li><span class="rule-icon">2</span> Дұрыс жауап = +25 ұпай, +15 XP</li>
+        <li><span class="rule-icon">3</span> Нәтиже соңында көрсетіледі</li>
+        <li><span class="rule-icon">4</span> Қате жасасаң — дұрыс жауап көрсетіледі</li>
+      </ul>
+    </div>
+
+    <!-- Topic selection -->
+    <div id="topic-select-section">
+      <h4 style="font-weight:800;color:var(--primary);margin-bottom:14px;font-size:0.95rem">📚 Тақырып таңда:</h4>
+      <div class="quick-play-grid" id="game-topic-grid"></div>
+    </div>
+
+    <!-- Quick start for memory/puzzle -->
+    <div id="quick-start-section" class="hidden">
+      <button class="btn btn-primary btn-lg btn-full" id="quick-start-btn" onclick="quickStartGame()">
+        🚀 Бастау!
+      </button>
+    </div>
+  </div>
+
+  <!-- Mini Leaderboard -->
+  <div class="mini-leaderboard">
+    <h3>🏆 Өз нәтижеңіз</h3>
+    <div id="personal-stats-lb"></div>
+  </div>
+
+</div>
+
+<!-- GAME MODAL -->
+<div class="modal-overlay" id="game-modal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h2>🎮 Ойын</h2>
+      <button class="modal-close" onclick="closeModal('game-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="game-modal-body"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/games.js"></script>
+<script>
+
+let selectedGameType = 'quiz';
+
+const GAME_INFO = {
+  quiz: {
+    title: '🎯 Quiz — Тест сұрақтар',
+    desc: 'Тақырып бойынша 4 жауаптан тұратын тест ойыны. Дұрыс жауап берген сайын ұпай жинайсың!',
+    rules: [
+      '4 нұсқадан дұрыс жауапты таңда',
+      'Дұрыс жауап = +25 ұпай, +15 XP',
+      'Нәтиже соңында көрсетіледі',
+      'Қате жасасаң — дұрыс жауап көрсетіледі',
+    ],
+    needsTopic: true,
+  },
+  tf: {
+    title: '✅ Рас / Жалған',
+    desc: 'Берілген тезисті оқып, Рас немесе Жалған деп жауап бер. Ойлануды қажет ететін ойын!',
+    rules: [
+      'Тезісті мұқият оқы',
+      'РАС немесе ЖАЛҒАН батырмасын бас',
+      'Дұрыс = +20 ұпай, +10 XP',
+      '3 сұрақтан тұрады',
+    ],
+    needsTopic: true,
+  },
+  dd: {
+    title: '🔗 Сәйкестендіру (Drag & Drop)',
+    desc: 'Сол жақтағы ұғымды оң жақтағы мәнімен дұрыс жұптастыр. Байланыстарды ойла!',
+    rules: [
+      'Сол жақтан ұғымды сүйреп апар',
+      'Оң жақтағы сәйкес ұяшыққа тастай',
+      '"Тексеру" батырмасын баса',
+      'Дұрыс жұп = +15 ұпай',
+    ],
+    needsTopic: true,
+  },
+  memory: {
+    title: '🧠 Жад ойыны',
+    desc: 'Картаны аудар және жұптарды тап. Жадыңды жаттықтыр! Аз қадамда — көп ұпай!',
+    rules: [
+      'Кезекпен 2 карта аудар',
+      'Жұп тапсаң — ашық қалады',
+      'Барлық жұп = ойын бітті',
+      'Аз қадам = көп ұпай',
+    ],
+    needsTopic: false,
+  },
+  puzzle: {
+    title: '🧩 Слайдер Пазл',
+    desc: 'Эмодзилерді дұрыс ретпен орналастыр! Бос ұяшыққа жақын тайлдарды бас.',
+    rules: [
+      'Бос ұяшыққа жақын тайлды бас',
+      'Тайл бос орынға жылжиды',
+      'Дұрыс ретке келтір = жеңіс!',
+      'Аз қадам = көп ұпай',
+    ],
+    needsTopic: false,
+  },
+};
+
+function selectGameType(type, el) {
+  selectedGameType = type;
+
+  // Update active card
+  document.querySelectorAll('.game-type-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  // Update info
+  const info = GAME_INFO[type];
+  document.getElementById('game-info-title').textContent = info.title;
+  document.getElementById('game-info-desc').textContent = info.desc;
+
+  const rulesList = document.getElementById('game-rules-list');
+  rulesList.innerHTML = info.rules.map((r, i) => `
+    <li><span class="rule-icon">${i+1}</span> ${r}</li>
+  `).join('');
+
+  const topicSection  = document.getElementById('topic-select-section');
+  const quickSection  = document.getElementById('quick-start-section');
+
+  if (info.needsTopic) {
+    topicSection.classList.remove('hidden');
+    quickSection.classList.add('hidden');
+  } else {
+    topicSection.classList.add('hidden');
+    quickSection.classList.remove('hidden');
+  }
+}
+
+function quickStartGame() {
+  if (selectedGameType === 'memory') startMemoryGame();
+  else if (selectedGameType === 'puzzle') startPuzzle();
+  openModal('game-modal');
+}
+
+function renderGameTopicGrid() {
+  const grid = document.getElementById('game-topic-grid');
+  if (!grid) return;
+
+  const topics = Object.values(TOPICS);
+  grid.innerHTML = topics.map(t => `
+    <div class="quick-topic-card" onclick="launchTopicGame('${t.id}')">
+      <span class="quick-topic-icon">${t.icon}</span>
+      <div class="quick-topic-name">${t.title}</div>
+    </div>
+  `).join('');
+}
+
+function launchTopicGame(topicId) {
+  if (selectedGameType === 'quiz')   startQuiz(topicId);
+  else if (selectedGameType === 'tf') startTrueFalse(topicId);
+  else if (selectedGameType === 'dd') startDragDrop(topicId);
+  openModal('game-modal');
+}
+
+function renderPersonalStats() {
+  const s = APP.state;
+  const lvl = getLevel(s.xp);
+  const topicsDone = Object.values(s.topics).filter(t => t.theory && t.game).length;
+  const acc = s.totalAnswered > 0 ? Math.round(s.correctAnswers / s.totalAnswered * 100) : 0;
+
+  const container = document.getElementById('personal-stats-lb');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="lb-item">
+      <div class="lb-rank rank-1">👑</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,var(--primary),var(--secondary))">${s.name ? s.name[0] : '?'}</div>
+      <div class="lb-info">
+        <div class="lb-name">${s.name || 'Оқушы'}</div>
+        <div class="lb-points">${lvl.title} · ${topicsDone}/6 тақырып · ${acc}% дәлдік</div>
+      </div>
+      <div class="lb-score">⭐ ${s.points}</div>
+    </div>
+    <div style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="background:var(--bg-alt);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:900;color:var(--primary)">${s.points}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Жалпы ұпай</div>
+      </div>
+      <div style="background:var(--bg-alt);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:900;color:var(--primary)">${lvl.level}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Деңгей</div>
+      </div>
+      <div style="background:var(--bg-alt);border-radius:12px;padding:14px;text-align:center">
+        <div style="font-size:1.5rem;font-weight:900;color:var(--primary)">${s.badges.length}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Жетістік</div>
+      </div>
+    </div>
+  `;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderGameTopicGrid();
+  renderPersonalStats();
+});
+</script>
+
+</body>
+</html>
